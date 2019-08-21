@@ -61,6 +61,7 @@
       thisProduct.getElements();
       thisProduct.initAccordion();
       thisProduct.initOrderForm();
+      thisProduct.initAmountWidget();
       thisProduct.processOrder();
     }
 
@@ -81,6 +82,15 @@
       thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
       thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
       thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
+      thisProduct.amountWidgetElem = thisProduct.element.querySelector(select.menuProduct.amountWidget);
+    }
+
+    initAmountWidget() {
+      const thisProduct = this;
+
+      thisProduct.amountWidget = new AmountWidget(thisProduct.amountWidgetElem);
+
+      thisProduct.amountWidgetElem.addEventListener('updated', () => thisProduct.processOrder());
     }
 
     initAccordion() {
@@ -166,8 +176,57 @@
         }
       }
 
+      price *= thisProduct.amountWidget.value;
+
       thisProduct.priceElem.innerHTML = price;
 
+    }
+  }
+
+  class AmountWidget {
+    constructor(element) {
+      const thisWidget = this;
+      thisWidget.value = settings.amountWidget.defaultValue;
+
+      thisWidget.getElements(element);
+      thisWidget.setValue(thisWidget.value);
+      thisWidget.initActions();
+    }
+
+    announce() {
+      const thisWidged = this;
+
+      const event = new Event('updated');
+      thisWidged.element.dispatchEvent(event);
+    }
+
+    getElements(element){
+      const thisWidget = this;
+
+      thisWidget.element = element;
+      thisWidget.input = thisWidget.element.querySelector(select.widgets.amount.input);
+      thisWidget.linkDecrease = thisWidget.element.querySelector(select.widgets.amount.linkDecrease);
+      thisWidget.linkIncrease = thisWidget.element.querySelector(select.widgets.amount.linkIncrease);
+    }
+
+    setValue(value) {
+      const thisWidged = this;
+
+      const newValue = parseInt(value);
+      if(newValue != thisWidged.value && newValue >= settings.amountWidget.defaultMin && newValue <= settings.amountWidget.defaultMax) {
+        thisWidged.value = newValue;
+        thisWidged.announce();
+      }
+
+      thisWidged.input.value = thisWidged.value;
+    }
+
+    initActions() {
+      const thisWidged = this;
+
+      thisWidged.input.addEventListener('change', () => thisWidged.setValue(thisWidged.input.value));
+      thisWidged.linkDecrease.addEventListener('click', () => thisWidged.setValue(thisWidged.value - 1));
+      thisWidged.linkIncrease.addEventListener('click', () => thisWidged.setValue(thisWidged.value + 1));
     }
   }
 
@@ -186,11 +245,11 @@
 
     init: function(){
       const thisApp = this;
-      console.log('*** App starting ***');
-      console.log('thisApp:', thisApp);
-      console.log('classNames:', classNames);
+      //console.log('*** App starting ***');
+      //console.log('thisApp:', thisApp);
+      //console.log('classNames:', classNames);
       console.log('settings:', settings);
-      console.log('templates:', templates);
+      //console.log('templates:', templates);
 
       thisApp.initData();
 
