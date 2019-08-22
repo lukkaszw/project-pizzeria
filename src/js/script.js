@@ -54,204 +54,162 @@
 
   class Product {
     constructor(id, data) {
-      const thisProduct = this;
-      thisProduct.id = id;
-      thisProduct.data = data;
-      thisProduct.renderInMenu();
-      thisProduct.getElements();
-      thisProduct.initAccordion();
-      thisProduct.initOrderForm();
-      thisProduct.initAmountWidget();
-      thisProduct.processOrder();
+      this.id = id;
+      this.data = data;
+      this.renderInMenu();
+      this.getElements();
+      this.initAccordion();
+      this.initOrderForm();
+      this.initAmountWidget();
+      this.processOrder();
     }
 
     renderInMenu() {
-      const thisProduct = this;
-      const generatedHTML = templates.menuProduct(thisProduct.data);
-      thisProduct.element = utils.createDOMFromHTML(generatedHTML);
+      const generatedHTML = templates.menuProduct(this.data);
+      this.element = utils.createDOMFromHTML(generatedHTML);
       const menuContainer = document.querySelector(select.containerOf.menu);
-      menuContainer.appendChild(thisProduct.element);
+      menuContainer.appendChild(this.element);
     }
 
     getElements() {
-      const thisProduct = this;
-
-      thisProduct.accordionTrigger = thisProduct.element.querySelector(select.menuProduct.clickable);
-      thisProduct.form = thisProduct.element.querySelector(select.menuProduct.form);
-      thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
-      thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
-      thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
-      thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
-      thisProduct.amountWidgetElem = thisProduct.element.querySelector(select.menuProduct.amountWidget);
+      this.accordionTrigger = this.element.querySelector(select.menuProduct.clickable);
+      this.form = this.element.querySelector(select.menuProduct.form);
+      this.formInputs = this.form.querySelectorAll(select.all.formInputs);
+      this.cartButton = this.element.querySelector(select.menuProduct.cartButton);
+      this.priceElem = this.element.querySelector(select.menuProduct.priceElem);
+      this.imageWrapper = this.element.querySelector(select.menuProduct.imageWrapper);
+      this.amountWidgetElem = this.element.querySelector(select.menuProduct.amountWidget);
     }
 
     initAmountWidget() {
-      const thisProduct = this;
-
-      thisProduct.amountWidget = new AmountWidget(thisProduct.amountWidgetElem);
-
-      thisProduct.amountWidgetElem.addEventListener('updated', () => thisProduct.processOrder());
+      this.amountWidget = new AmountWidget(this.amountWidgetElem);
+      this.amountWidgetElem.addEventListener('updated', () => this.processOrder());
     }
 
     initAccordion() {
-      const thisProduct = this;
-
-      thisProduct.accordionTrigger.addEventListener('click', () => {
-        thisProduct.element.classList.toggle(classNames.menuProduct.wrapperActive);
+      this.accordionTrigger.addEventListener('click', () => {
+        this.element.classList.toggle(classNames.menuProduct.wrapperActive);
         const activeProducts = document.querySelectorAll(select.all.menuProductsActive);
 
         for(let activeProduct of activeProducts) {
-          if(activeProduct !== thisProduct.element) {
+          if(activeProduct !== this.element) {
             activeProduct.classList.remove(classNames.menuProduct.wrapperActive);
           }
         }
 
-        /*DRUGIE ROZWIĄZANIE NA DOLE BY PORÓWNAĆ.
-        OBA DZIAŁAJĄ, ALE JAK Z JAKOŚCIĄ KODU? CZY WARTO STOSOWAĆ ZAMIANE NODE LISTY NA TABLICĘ DLA SAMEGO FOREACH. JAKOŚ TAK MI WYGODNIEJ ZAMIAST PĘTLI FOR OF. CZĘSTO TAK ROBIĘ I NIE WIEM CZY TO DOBRA PRAKTYKA.
-        CHCE O TO ZAPYTAĆ NA ROZMOWIE, ALE ZOSTAWIŁEM TUTAJ TEN KOD Z OBJAŚNIENIEM, ŻEBYŚ MÓGŁ GO OCENIĆ.
-
-        [...activeProducts].forEach(activeProduct => {
-          if(activeProduct !== thisProduct.element) {
-            activeProduct.classList.remove('active');
-          }
-        });
-
-        */
       });
     }
 
     initOrderForm() {
-      const thisProduct = this;
-
-      thisProduct.form.addEventListener('submit', function(event){
+      this.form.addEventListener('submit', (event) => {
         event.preventDefault();
-        thisProduct.processOrder();
+        this.processOrder();
       });
 
-      for(let input of thisProduct.formInputs){
-        input.addEventListener('change', function(){
-          thisProduct.processOrder();
-        });
+      for(let input of this.formInputs){
+        input.addEventListener('change', () => this.processOrder());
       }
 
-      thisProduct.cartButton.addEventListener('click', function(event){
+      this.cartButton.addEventListener('click', (event) => {
         event.preventDefault();
-        thisProduct.processOrder();
+        this.processOrder();
       });
     }
 
     processOrder() {
-      const thisProduct = this;
-      const formData = utils.serializeFormToObject(thisProduct.form);
-      let price = thisProduct.data.price;
+      const formData = utils.serializeFormToObject(this.form);
+      let price = this.data.price;
 
-      const allParams = thisProduct.data.params;
+      const allParams = this.data.params || [];
 
-      if(allParams) {
-        for(let param in allParams) {
-          const paramOptions = allParams[param].options;
-          const chosenIngrs = formData[param] ? formData[param] : [];
-          for(let option in paramOptions) {
-            const ingrPrice = paramOptions[option].price;
-            const isIngrDefault = paramOptions[option].default;
-            const isIngrChosen = chosenIngrs.includes(option);
-            if(isIngrChosen && !isIngrDefault) {
-              price += ingrPrice;
-            } else if(!isIngrChosen && isIngrDefault) {
-              price -= ingrPrice;
-            }
-            const images = thisProduct.imageWrapper.querySelectorAll(`.${param}-${option}`);
-            if(images.length > 0) {
-              if(isIngrChosen) {
-                images.forEach(image => {
-                  image.classList.add(classNames.menuProduct.imageVisible);
-                });
-              } else {
-                images.forEach(image => {
-                  image.classList.remove(classNames.menuProduct.imageVisible);
-                });
-              }
-            }
+      for(let param in allParams) {
+        const paramOptions = allParams[param].options;
+        const chosenIngredients = formData[param] || [];
+
+        for(let option in paramOptions) {
+          const ingrPrice = paramOptions[option].price;
+          const isIngredientDefault = paramOptions[option].default;
+          const isIngredientChosen = chosenIngredients.includes(option);
+          if(isIngredientChosen && !isIngredientDefault) {
+            price += ingrPrice;
+          } else if(!isIngredientChosen && isIngredientDefault) {
+            price -= ingrPrice;
+          }
+
+          const images = this.imageWrapper.querySelectorAll(`.${param}-${option}`) || [];
+          if(isIngredientChosen) {
+            images.forEach(image => image.classList.add(classNames.menuProduct.imageVisible));
+          } else {
+            images.forEach(image => image.classList.remove(classNames.menuProduct.imageVisible));
           }
         }
+
       }
 
-      price *= thisProduct.amountWidget.value;
-
-      thisProduct.priceElem.innerHTML = price;
+      price *= this.amountWidget.value;
+      this.priceElem.innerHTML = price;
 
     }
+
   }
 
   class AmountWidget {
     constructor(element) {
-      const thisWidget = this;
-      thisWidget.value = settings.amountWidget.defaultValue;
-
-      thisWidget.getElements(element);
-      thisWidget.setValue(thisWidget.value);
-      thisWidget.initActions();
+      this.value = settings.amountWidget.defaultValue;
+      this.getElements(element);
+      this.setValue(this.value);
+      this.initActions();
     }
 
     announce() {
-      const thisWidged = this;
-
       const event = new Event('updated');
-      thisWidged.element.dispatchEvent(event);
+      this.element.dispatchEvent(event);
     }
 
     getElements(element){
-      const thisWidget = this;
-
-      thisWidget.element = element;
-      thisWidget.input = thisWidget.element.querySelector(select.widgets.amount.input);
-      thisWidget.linkDecrease = thisWidget.element.querySelector(select.widgets.amount.linkDecrease);
-      thisWidget.linkIncrease = thisWidget.element.querySelector(select.widgets.amount.linkIncrease);
+      this.element = element;
+      this.input = this.element.querySelector(select.widgets.amount.input);
+      this.linkDecrease = this.element.querySelector(select.widgets.amount.linkDecrease);
+      this.linkIncrease = this.element.querySelector(select.widgets.amount.linkIncrease);
     }
 
     setValue(value) {
-      const thisWidged = this;
-
       const newValue = parseInt(value);
-      if(newValue != thisWidged.value && newValue >= settings.amountWidget.defaultMin && newValue <= settings.amountWidget.defaultMax) {
-        thisWidged.value = newValue;
-        thisWidged.announce();
+
+      if(newValue !== this.value && newValue >= settings.amountWidget.defaultMin && newValue <= settings.amountWidget.defaultMax) {
+        this.value = newValue;
+        this.announce();
       }
 
-      thisWidged.input.value = thisWidged.value;
+      this.input.value = this.value;
     }
 
     initActions() {
-      const thisWidged = this;
-
-      thisWidged.input.addEventListener('change', () => thisWidged.setValue(thisWidged.input.value));
-      thisWidged.linkDecrease.addEventListener('click', () => thisWidged.setValue(thisWidged.value - 1));
-      thisWidged.linkIncrease.addEventListener('click', () => thisWidged.setValue(thisWidged.value + 1));
+      this.input.addEventListener('change', () => this.setValue(this.input.value));
+      this.linkDecrease.addEventListener('click', () => this.setValue(this.value - 1));
+      this.linkIncrease.addEventListener('click', () => this.setValue(this.value + 1));
     }
+
   }
 
   const app = {
     initData: function() {
-      const thisApp = this;
-      thisApp.data = dataSource;
+      this.data = dataSource;
     },
 
     initMenu: function() {
-      const thisApp = this;
-      for(let productData in thisApp.data.products) {
-        new Product(productData, thisApp.data.products[productData]);
+      for(let productData in this.data.products) {
+        new Product(productData, this.data.products[productData]);
       }
     },
 
     init: function(){
-      const thisApp = this;
-
-      thisApp.initData();
-
-      thisApp.initMenu();
+      this.initData();
+      this.initMenu();
     },
 
   };
 
   app.init();
+
 }
