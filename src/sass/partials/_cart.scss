@@ -11,12 +11,19 @@
   box-shadow: 0 0 $base-size rgba(0, 0, 0, 0.2);
   z-index: 9999;
 
+  @media (max-width: 800px) {
+    position: fixed;
+    left: 10%;
+    top: 20%;
+    min-width: 80%;
+    display: none;
+  }
+
   &.active {
     .cart__content {
       @include accordion-open();
       padding: ($base-size * 1.5) 0 0 0;
     }
-
   }
 
   &__summary {
@@ -26,7 +33,7 @@
   }
 
   &__icon {
-    font-size: ($base-size * 2);
+    font-size: ($base-size * 1.8);
   }
 
   &__total-number {

@@ -6,12 +6,28 @@
   &__wrapper {
     position: relative;
   }
+}
 
+.cart-mobile-activater {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: none;
+  @media (max-width: 800px) {
+    display: block;
+  }
+  &.active {
+    color: red;
+  }
 }
 
 .logo {
   display: inline-block;
   line-height: 1;
+  @media (max-width: 800px) {
+    display: block;
+    text-align: center;
+  }
 
   &__title {
     margin: 0 0 $base-size 0;
