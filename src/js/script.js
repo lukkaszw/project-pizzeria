@@ -6,6 +6,7 @@
   const select = {
     templateOf: {
       menuProduct: '#template-menu-product',
+      orderSummary: '#template-order-summary',
     },
     containerOf: {
       menu: '#product-list',
@@ -31,6 +32,16 @@
         linkIncrease: 'a[href="#more"]',
       },
     },
+    cart: {
+      totalPrice: '.cart__total-price strong',
+      totalNumber: '.cart__total-number',
+      mobileActivaterAmount: '.cart-mobile-activater .cart-amount',
+      mobileActivaterBtn: '.cart-mobile-activater',
+      cartSummary: '.cart__order-summary',
+      subTotalPrice: '.cart__order-price > li:first-child .cart__order-price-sum',
+      deliveryPrice: '.cart__order-price > li:nth-child(2) .cart__order-price-sum',
+      totalPriceBelow: '.cart__order-price > li:nth-child(3) .cart__order-price-sum',
+    }
   };
 
   const classNames = {
@@ -50,7 +61,79 @@
 
   const templates = {
     menuProduct: Handlebars.compile(document.querySelector(select.templateOf.menuProduct).innerHTML),
+    orderSummary: Handlebars.compile(document.querySelector(select.templateOf.orderSummary).innerHTML),
   };
+
+  class Cart {
+    constructor() {
+      this.products = [];
+      this.totalPrice = 0;
+      this.subTotalPrice = 0;
+      this.totalNumber = 0;
+      this.currentId = 1;
+      this.delivery = 10;
+      this.getElements();
+    }
+
+    getElements() {
+      this.mobileActivaterBtnElem = document.querySelector(select.cart.mobileActivaterBtn);
+      this.mobileActivaterAmountElem = document.querySelector(select.cart.mobileActivaterAmount);
+      this.element = document.querySelector(select.containerOf.cart);
+      this.totalPriceElem = this.element.querySelector(select.cart.totalPrice);
+      this.totalNumberElem = this.element.querySelector(select.cart.totalNumber);
+      this.subTotalPriceElem = this.element.querySelector(select.cart.subTotalPrice);
+      this.deliveryElem = this.element.querySelector(select.cart.deliveryPrice);
+      this.totalPriceBelowElem = this.element.querySelector(select.cart.totalPriceBelow);
+    }
+
+    renderInCartInfo() {
+      this.totalPriceElem.innerHTML = `$${this.totalPrice}`;
+      this.totalNumberElem.innerHTML = this.totalNumber;
+      this.mobileActivaterAmountElem.innerHTML = this.totalNumber;
+      this.subTotalPriceElem.innerHTML = `$${this.subTotalPrice}`;
+      this.deliveryElem.innerHTML = `$${this.delivery}`;
+      this.totalPriceBelowElem.innerHTML = `$${this.totalPrice}`;
+      if(this.totalNumber > 0) {
+        this.mobileActivaterBtnElem.disabled = false;
+      }
+    }
+
+    addToCart(name, chosenIngr, price, amount) {
+      if(this.products.length === 0) this.totalPrice += this.delivery;
+      const cartProduct = new CartProduct(this.currentId, name, chosenIngr, price, amount);
+      this.totalPrice += cartProduct.price;
+      this.subTotalPrice += cartProduct.price;
+      this.totalNumber += cartProduct.amount;
+      this.currentId++;
+      this.products.push(cartProduct);
+      this.renderInCartInfo();
+    }
+  }
+
+  class CartProduct {
+    constructor(id, name, formData, price, amount) {
+      this.id = id;
+      this.name = name;
+      this.data = formData;
+      this.price = price;
+      this.amount = amount;
+      this.renderCartInSummary();
+      this.getElements();
+    }
+
+    getElements() {
+      this.element = document.querySelector(`#product-${this.id}`);
+      this.increseElem = this.element.querySelector('.plus');
+      this.decreaseElem = this.element.querySelector('.minus');
+      this.inputAmountElem = this.element.querySelector('input');
+    }
+
+    renderCartInSummary() {
+      const generatedHTML = templates.orderSummary(this);
+      const cartSummaryContainer = document.getElementById('card-order-summary');
+      cartSummaryContainer.innerHTML += generatedHTML;
+    }
+  }
 
   class Product {
     constructor(id, data) {
@@ -113,6 +196,8 @@
       this.cartButton.addEventListener('click', (event) => {
         event.preventDefault();
         this.processOrder();
+        this.addToCart();
+        console.log(app.cart);
       });
     }
 
@@ -125,7 +210,6 @@
       for(let param in allParams) {
         const paramOptions = allParams[param].options;
         const chosenIngredients = formData[param] || [];
-
         for(let option in paramOptions) {
           const ingrPrice = paramOptions[option].price;
           const isIngredientDefault = paramOptions[option].default;
@@ -148,9 +232,15 @@
 
       price *= this.amountWidget.value;
       this.priceElem.innerHTML = price;
-
     }
 
+    addToCart() {
+      const price = parseFloat(this.priceElem.innerHTML);
+      const chosenIngr = utils.serializeFormToObject(this.form);
+      const amount =this.amountWidget.value;
+      delete chosenIngr.amount;
+      app.cart.addToCart(this.data.name, chosenIngr, price, amount);
+    }
   }
 
   class AmountWidget {
@@ -196,6 +286,9 @@
     initData: function() {
       this.data = dataSource;
     },
+    initCart: function() {
+      this.cart = new Cart();
+    },
 
     initMenu: function() {
       for(let productData in this.data.products) {
@@ -205,6 +298,7 @@
 
     init: function(){
       this.initData();
+      this.initCart();
       this.initMenu();
     },
 
