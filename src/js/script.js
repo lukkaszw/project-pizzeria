@@ -101,12 +101,25 @@
     addToCart(name, chosenIngr, price, amount) {
       if(this.products.length === 0) this.totalPrice += this.delivery;
       const cartProduct = new CartProduct(this.currentId, name, chosenIngr, price, amount);
-      this.totalPrice += cartProduct.price;
-      this.subTotalPrice += cartProduct.price;
-      this.totalNumber += cartProduct.amount;
-      this.currentId++;
+      //this.totalPrice += cartProduct.price;
+      //this.subTotalPrice += cartProduct.price;
+      //this.totalNumber += cartProduct.amount;
+      //this.currentId++;
+
       this.products.push(cartProduct);
+
+      this.calcPricesAndNumber();
       this.renderInCartInfo();
+    }
+
+    calcPricesAndNumber() {
+      this.subTotalPrice = 0;
+      this.totalNumber = 0;
+      this.products.forEach(product => {
+        this.subTotalPrice += product.price;
+        this.totalNumber += product.amount;
+      });
+      this.totalPrice = this.subTotalPrice + this.delivery;
     }
   }
 
@@ -197,7 +210,6 @@
         event.preventDefault();
         this.processOrder();
         this.addToCart();
-        console.log(app.cart);
       });
     }
 
