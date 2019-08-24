@@ -22,7 +22,7 @@
           <h1 class="logo__title"><span>Mamma</span>Mia!</h1>
           <h2 class="logo__subtitle">the best homemade Italian food</h2>
         </div>
-        <div id="cart" class="cart active">
+        <div id="cart" class="cart">
           <div class="cart__summary">
             <span class="cart__total-number">0</span>
             <span class="cart__total-price">Total price: <strong>$0</strong></span>
@@ -141,16 +141,23 @@
     </script>
 
     <script id="template-order-summary" type="text/x-handlebars-template">
-        <li id="product-{{ id }}">
-          <h4 class="cart__product-name">{{ name }}</h4>
+        <li class="cart__product" id="product-{{ id }}">
+          <div class="cart__product-details">
+            <p class="cart__product-name"><strong>{{ name }}</strong></p>
+            {{#if ingredients}}
+                {{#each ingredients}}
+                  {{#each this}}
+                    <p>- {{ this }}</p>
+                  {{/each}}
+                {{/each}}
+            {{/if}}
+          </div>
           <div class="widget-amount">
               <a class="btn-quantity-lt" href="#less"><i class="fas fa-minus"></i></a>
-              <input type="text" class="cart__product-price" value="{{ amount }}">
+              <input disabled type="text" name="amount" class="cart__product-price" value="{{ amount }}">
               <a class="btn-quantity-lt" href="#more"><i class="fas fa-plus"></i></a>
           </div>
-          <p class="cart__product-price">
-            $ <span>{{ price }}</span>
-          </p>
+          <p class="cart__product-price">$ <span>{{ price }}</span></p>
         </li>
     </script>
 
