@@ -8,9 +8,6 @@
   background: $color-light;
   border-bottom: 1px solid lighten($color-dark, 70%);
   border-radius: $radius;
-  @media (max-width: 800px) {
-    padding: ($base-size * 3) ($base-size * 1);
-  }
 
   &__header {
     @include flex(row, center, space-between);
@@ -34,10 +31,6 @@
     top: $base-size;
     font-size: ($base-size * 1.5);
     transition: $transition;
-    @media (max-width: 800px) {
-      top: 100%;
-      right: 50%;
-    }
   }
 
   &__base-price {
@@ -52,18 +45,12 @@
     @include flex(row, center, space-between);
     @include accordion-closed();
     animation: flipdown 0.5s ease both;
-    @media (max-width: 800px) {
-      @include flex(column, center, space-between);
-    }
   }
 
   &__params {
     margin: 0 0 ($base-size * 3) 0;
     padding: 0;
     list-style-type: none;
-    @media (max-width: 800px) {
-      margin: 0 0 ($base-size * 1) 0;
-    }
   }
 
   &__params-title {
@@ -77,10 +64,6 @@
     width: calc(100% - 400px);
     opacity: 0;
     transition: opacity 200ms;
-    @media(max-width: 800px) {
-      width: 100%;
-      @include flex(column, center, space-around);
-    }
   }
 
   &__total-price {
@@ -95,11 +78,6 @@
     height: 350px;
     opacity: 0;
     transition: opacity 200ms;
-    @media (max-width: 800px) {
-      margin-top: 10px;
-      max-width: 90%;
-      order: -1;
-    }
 
     &.small {
       width: 220px;
@@ -138,13 +116,6 @@
 }
 
 .widget-amount {
-  @media (max-width: 800px) {
-    width: 100%;
-    text-align: center;
-    order: -1;
-    margin-bottom: ($base-size * 2);
-  }
-
   input {
     width: 30px;
     height: 30px;
@@ -153,12 +124,4 @@
     padding: 0;
   }
 
-}
-
-.amount {
-  @media (max-width: 800px) {
-    min-width: 100%;
-    @include flex(row, stretch, space-around);
-    flex-wrap: wrap;
-  }
 }
