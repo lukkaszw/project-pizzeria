@@ -227,6 +227,25 @@
 
   }
 
+  class Cart {
+    constructor(element) {
+      this.products = [];
+      this.getElements(element);
+      this.initActions();
+    }
+
+    getElements(element) {
+      this.dom = {};
+      this.dom.wrapper = element;
+      this.dom.toggleTrigger = this.dom.wrapper.querySelector(select.cart.toggleTrigger);
+    }
+
+    initActions() {
+      this.dom.toggleTrigger.addEventListener('click', () => this.dom.wrapper.classList.toggle(classNames.cart.wrapperActive));
+    }
+
+  }
+
   const app = {
     initData: function() {
       this.data = dataSource;
@@ -238,9 +257,15 @@
       }
     },
 
+    initCart: function() {
+      const cartElement = document.querySelector(select.containerOf.cart);
+      this.cart = new Cart(cartElement);
+    },
+
     init: function(){
       this.initData();
       this.initMenu();
+      this.initCart();
     },
 
   };
