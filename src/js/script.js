@@ -148,11 +148,20 @@
       this.cartButton.addEventListener('click', (event) => {
         event.preventDefault();
         this.processOrder();
+        this.addToCart();
       });
+    }
+
+    addToCart() {
+      this.name = this.data.name;
+      this.amount = this.amountWidget.value;
+      app.cart.add(this);
     }
 
     processOrder() {
       const formData = utils.serializeFormToObject(this.form);
+
+      this.params = {};
       let price = this.data.price;
 
       const allParams = this.data.params || [];
@@ -174,6 +183,13 @@
           const images = this.imageWrapper.querySelectorAll(`.${param}-${option}`) || [];
           if(isIngredientChosen) {
             images.forEach(image => image.classList.add(classNames.menuProduct.imageVisible));
+            if(!this.params[param]) {
+              this.params[param] = {
+                label: allParams[param].label,
+                options: {},
+              };
+            }
+            this.params[param].options[option] = paramOptions[option].label;
           } else {
             images.forEach(image => image.classList.remove(classNames.menuProduct.imageVisible));
           }
@@ -181,8 +197,9 @@
 
       }
 
-      price *= this.amountWidget.value;
-      this.priceElem.innerHTML = price;
+      this.priceSingle = price;
+      this.price = this.priceSingle * this.amountWidget.value;
+      this.priceElem.innerHTML = this.price;
 
     }
 
@@ -238,10 +255,17 @@
       this.dom = {};
       this.dom.wrapper = element;
       this.dom.toggleTrigger = this.dom.wrapper.querySelector(select.cart.toggleTrigger);
+      this.dom.productList = this.dom.wrapper.querySelector(select.cart.productList);
     }
 
     initActions() {
       this.dom.toggleTrigger.addEventListener('click', () => this.dom.wrapper.classList.toggle(classNames.cart.wrapperActive));
+    }
+
+    add(menuProduct) {
+      const generatedHTML = templates.cartProduct(menuProduct);
+      const generatedDOM = utils.createDOMFromHTML(generatedHTML);
+      this.dom.productList.appendChild(generatedDOM);
     }
 
   }
