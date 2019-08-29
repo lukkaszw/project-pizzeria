@@ -301,7 +301,8 @@
         };
 
         this.products.forEach(product => {
-          payload.products.push(product.getData());
+          const productParams = product.getData();
+          payload.products.push(productParams);
         });
 
         const options = {
@@ -313,9 +314,19 @@
         };
 
         fetch(url, options)
-          .then(response => response.json())
+          .then(response => {
+            if(response.ok) {
+              return response.json();
+            } else {
+              throw new Error(`Error - ${response.status}`);
+            }
+          })
           .then(parsedResponse => {
             console.log('Dokonano zamówienia:', parsedResponse);
+          })
+          .catch(error => {
+            console.warn(error);
+            alert('Niestety nie udało się wysłać zamówienia przez problemy techniczne na stronie. Nasz zespół nad tym pracuje. Zapraszamy wkrótce.');
           });
       }
 
@@ -421,10 +432,20 @@
       this.data = {};
       const url = `${settings.db.url}/${settings.db.product}`;
       fetch(url)
-        .then(rawResponse => rawResponse.json())
+        .then(response => {
+          if(response.ok) {
+            return response.json();
+          } else {
+            throw new Error(`Error - ${response.status}`);
+          }
+        })
         .then(parsedResponse => {
           this.data.products = parsedResponse;
           this.initMenu();
+        })
+        .catch(error => {
+          console.warn(error);
+          alert('Problemy techniczne na stronie. Nasz zespół nad tym pracuje. Przepraszamy i zapraszamy ponownie wkrótce.');
         });
     },
 
