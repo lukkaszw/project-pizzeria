@@ -115,23 +115,57 @@
       this.amountWidgetElem = this.element.querySelector(select.menuProduct.amountWidget);
     }
 
+    resetOptions() {
+      const defaultOptions = [];
+      if(this.data.params) {
+        Object.keys(this.data.params).forEach(param => {
+          Object.keys(this.data.params[param].options).forEach(option => {
+            if(this.data.params[param].options[option].default) {
+              defaultOptions.push(option);
+            }
+          });
+        });
+      }
+      this.setOptions(defaultOptions, 1);
+      this.processOrder();
+    }
+
+    setOptions(chosenOptions, amount) {
+      this.amountWidget.input.value = amount;
+      this.amountWidget.value = amount;
+
+      this.formInputs.forEach(element => {
+        if(element.type === 'checkbox' || element.type === 'radio') {
+          if(chosenOptions.includes(element.id)) element.checked = true;
+          else element.checked = false;
+        } else if(element.type.includes('select')) {
+          const listOfOptions = element.querySelectorAll('option');
+          listOfOptions.forEach(option => {
+            if(chosenOptions.includes(option.value)) option.selected = true;
+            else option.selected = false;
+          });
+        }
+      });
+    }
+
     initAmountWidget() {
       this.amountWidget = new AmountWidget(this.amountWidgetElem);
       this.amountWidgetElem.addEventListener('updated', () => this.processOrder());
     }
 
-    initAccordion() {
-      this.accordionTrigger.addEventListener('click', () => {
-        this.element.classList.toggle(classNames.menuProduct.wrapperActive);
-        const activeProducts = document.querySelectorAll(select.all.menuProductsActive);
+    activate() {
+      this.element.classList.toggle(classNames.menuProduct.wrapperActive);
+      const activeProducts = document.querySelectorAll(select.all.menuProductsActive);
 
-        for(let activeProduct of activeProducts) {
-          if(activeProduct !== this.element) {
-            activeProduct.classList.remove(classNames.menuProduct.wrapperActive);
-          }
+      for(let activeProduct of activeProducts) {
+        if(activeProduct !== this.element) {
+          activeProduct.classList.remove(classNames.menuProduct.wrapperActive);
         }
+      }
+    }
 
-      });
+    initAccordion() {
+      this.accordionTrigger.addEventListener('click', () => this.activate());
     }
 
     initOrderForm() {
@@ -155,6 +189,28 @@
       this.name = this.data.name;
       this.amount = this.amountWidget.value;
       app.cart.add(this);
+      this.resetOptions();
+    }
+
+    cartProductUpdate(params, amount) {
+      const optionsInParams = [];
+
+      Object.keys(params).forEach(param => {
+        Object.keys(params[param].options).forEach(option => {
+          optionsInParams.push(option);
+        });
+      });
+
+      this.setOptions(optionsInParams, amount);
+
+      this.processOrder();
+      if(!this.element.classList.contains('active')) {
+        this.activate();
+      }
+      this.element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
     }
 
     processOrder() {
@@ -279,11 +335,27 @@
         e.preventDefault();
         this.sendOrder();
       });
+
+      this.dom.phone.addEventListener('change', (e) => this.validateFormEl(e.target));
+      this.dom.address.addEventListener('change', (e) => this.validateFormEl(e.target));
+    }
+
+    validateFormEl(element) {
+      if(element.value.length < 9) {
+        element.classList.add('error');
+        return false;
+      } else {
+        element.classList.remove('error');
+        return true;
+      }
     }
 
     validateData() {
-      if(this.products.length > 0 && this.dom.address.value && this.dom.phone.value) return true;
-      else return false;
+      let isValid = true;
+      if(this.products.length === 0) isValid = false;
+      if(!this.validateFormEl(this.dom.phone)) isValid = false;
+      if(!this.validateFormEl(this.dom.address)) isValid = false;
+      return isValid;
     }
 
     sendOrder() {
@@ -323,12 +395,22 @@
           })
           .then(parsedResponse => {
             console.log('Dokonano zamówienia:', parsedResponse);
+            this.resetCart();
           })
           .catch(error => {
             console.warn(error);
             alert('Niestety nie udało się wysłać zamówienia przez problemy techniczne na stronie. Nasz zespół nad tym pracuje. Zapraszamy wkrótce.');
           });
       }
+    }
+
+    resetCart() {
+
+      this.products = [];
+      this.dom.productList.innerHTML = '';
+      this.dom.phone.value = '';
+      this.dom.address.value = '';
+      this.update();
 
     }
 
@@ -369,6 +451,7 @@
   class CartProduct {
     constructor(menuProduct, element) {
       this.id = menuProduct.id;
+      this.referenceToProduct = menuProduct;
       this.name = menuProduct.name;
       this.price = menuProduct.price;
       this.priceSingle = menuProduct.priceSingle;
@@ -391,10 +474,16 @@
     initActions() {
       this.dom.edit.addEventListener('click',() => {});
       this.dom.remove.addEventListener('click', () => this.remove());
+      this.dom.edit.addEventListener('click', () => {
+        this.update();
+        this.remove();
+      });
     }
 
     initAmountWidget() {
       this.amountWidget = new AmountWidget(this.dom.amountWidget);
+      this.amountWidget.value = this.amount;
+      this.amountWidget.input.value = this.amount;
       this.dom.amountWidget.addEventListener('updated', () => this.updateAmount());
     }
 
@@ -402,6 +491,10 @@
       this.amount = this.amountWidget.value;
       this.price = this.priceSingle * this.amount;
       this.dom.price.innerHTML = this.price;
+      this.dom.wrapper.classList.add('changed');
+      setTimeout(() => {
+        this.dom.wrapper.classList.remove('changed');
+      }, 400);
     }
 
     remove() {
@@ -415,14 +508,27 @@
       this.dom.wrapper.dispatchEvent(event);
     }
 
+    update() {
+      this.referenceToProduct.cartProductUpdate(this.params, this.amount);
+    }
+
     getData() {
+      console.log(this.params);
+      const newParamList = {};
+      Object.keys(this.params).forEach(param => {
+        newParamList[param] = [];
+        for(let key in this.params[param].options) {
+          newParamList[param].push(key);
+        }
+      });
+
       return {
         id: this.id,
         name: this.name,
         amount: this.amount,
         priceSingle: this.priceSingle,
         price: this.price,
-        params: this.params,
+        params: newParamList
       };
     }
   }
