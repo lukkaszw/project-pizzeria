@@ -136,13 +136,19 @@
 
       this.formInputs.forEach(element => {
         if(element.type === 'checkbox' || element.type === 'radio') {
-          if(chosenOptions.includes(element.id)) element.checked = true;
-          else element.checked = false;
+          if(chosenOptions.includes(element.id)) {
+            element.checked = true;
+          } else {
+            element.checked = false;
+          }
         } else if(element.type.includes('select')) {
           const listOfOptions = element.querySelectorAll('option');
           listOfOptions.forEach(option => {
-            if(chosenOptions.includes(option.value)) option.selected = true;
-            else option.selected = false;
+            if(chosenOptions.includes(option.value)) {
+              option.selected = true;
+            } else {
+              option.selected = false;
+            }
           });
         }
       });
@@ -194,6 +200,48 @@
 
     cartProductUpdate(params, amount) {
       const optionsInParams = [];
+
+      /*
+
+
+        params = {
+          param1: {
+            options1: {
+             optionA1: {},
+             optionA2: {}
+            },
+            options2: {
+             optionB1: {},
+             optionB2: {}
+            }
+          },
+          param2: {
+            options1: {
+             optionC1: {},
+             optionC2: {}
+            },
+            options2: {
+             optionD1: {},
+             optionD2: {}
+            },
+          }
+        }
+
+        Taka mniej więcej struktura obiektu przychodzi z produktu z karty (z cartProduct).
+
+        Chce wrzucić do tablicy optionsInParams poszczególne opcje, ale nie ich wartości tylko klucze(keys). Tak żeby w tablicy było: ["optionA1", "optionA2", "optionB1", "optionB2", "optionC1" itd....].
+
+        Podobnie robie w metodzie resetOptions. Tylko tam potrzebne mi są tylko wartości defaultowe, dlatego sprawdzam, czy opcje mają default na true i dopiero wtedy je pushuje.
+
+        Taka tablica jest mi potrzebna jako argument do metody this.setOptions, bo takie wartości są ustawiane jako id lub name w formularzu w checkboxach, radio oraz jako value w opcjach selectu. W ten sposób sprawdzając czy w tej tablicy są ich atrybuty ustawiam opcje w polach wyboru produktu.
+
+        Dlatego loopuje porzez wszystkie params, a następnie wszystkie options w każdym param by się dostac do kluczy option i je wrzucić do tablicy. Chciałem metodą map wewnątrz pierwszej pętli, ale wtedy wychodzi tablica opcji z ostatniego param. Chyba, że bym konkatenował każdą następną tablicę zwróconą z map do tej głównej. Myśle, że wyszłoby bardziej zagmatwanie niż zwykłym pushem.
+
+        Tak wymyśliłem algorytm na reset opcji po dodaniu produktu oraz ustawianie opcji edytowanego produktu z karty.
+        Oczywiście jeśli masz pomysł na prostrze i bardziej czytelne rozwiązania to byłoby super i z chęcią wysłucham każdej rady :)
+
+
+      */
 
       Object.keys(params).forEach(param => {
         Object.keys(params[param].options).forEach(option => {
