@@ -362,6 +362,8 @@
       const url = `${settings.db.url}/${settings.db.order}`;
 
       if(this.validateData()) {
+        const productParams = this.products.map(product => product.getData());
+
         const payload = {
           address: this.dom.address.value,
           phone: this.dom.phone.value,
@@ -369,13 +371,8 @@
           deliveryFee: this.deliveryFee,
           subtotalPrice: this.subtotalPrice,
           totalPrice: this.totalPrice,
-          products: []
+          products: productParams
         };
-
-        this.products.forEach(product => {
-          const productParams = product.getData();
-          payload.products.push(productParams);
-        });
 
         const options = {
           method: 'POST',
@@ -533,10 +530,14 @@
     }
   }
 
-  const app = {
-    initData: function() {
+  class App {
+    constructor(dbPaths) {
+      this.dbPaths = dbPaths;
+    }
+
+    initData() {
       this.data = {};
-      const url = `${settings.db.url}/${settings.db.product}`;
+      const url = `${this.dbPaths.url}/${this.dbPaths.product}`;
       fetch(url)
         .then(response => {
           if(response.ok) {
@@ -553,26 +554,28 @@
           console.warn(error);
           alert('Problemy techniczne na stronie. Nasz zespół nad tym pracuje. Przepraszamy i zapraszamy ponownie wkrótce.');
         });
-    },
+    }
 
-    initMenu: function() {
+    initMenu() {
       for(let productData in this.data.products) {
         new Product(this.data.products[productData].id, this.data.products[productData]);
       }
-    },
+    }
 
-    initCart: function() {
+    initCart() {
       const cartElement = document.querySelector(select.containerOf.cart);
       this.cart = new Cart(cartElement);
-    },
+    }
 
-    init: function(){
+    init() {
       this.initData();
+      this.initMenu();
       this.initCart();
-    },
+    }
 
-  };
+  }
 
+  const app = new App(settings.db);
   app.init();
 
 }
