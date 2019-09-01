@@ -510,13 +510,9 @@
     }
 
     getData() {
-      console.log(this.params);
       const newParamList = {};
       Object.keys(this.params).forEach(param => {
-        newParamList[param] = [];
-        for(let key in this.params[param].options) {
-          newParamList[param].push(key);
-        }
+        newParamList[param] = Object.keys(this.params[param].options).map(option => option);
       });
 
       return {

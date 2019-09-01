@@ -2,10 +2,12 @@
   padding: ($base-size * 4) 0;
   background: $color-dark;
   color: $color-light;
-  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
+  @media(max-width: 700px) {
+    text-align: center;
+  }
 
   &__wrapper {
     position: relative;

@@ -10,8 +10,20 @@
   font-size: $base-size;
   box-shadow: 0 0 $base-size rgba(0, 0, 0, 0.2);
   z-index: 9999;
+  @media(max-width: 700px) {
+    top: 120%;
+    right: 50%;
+    transform: translateX(50%);
+  }
 
   &.active {
+    @media(max-width: 700px) {
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      overflow: auto;
+    }
+
     .cart__content {
       @include accordion-open();
       padding: ($base-size * 1.5) 0 0 0;
