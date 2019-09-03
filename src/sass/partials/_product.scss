@@ -17,16 +17,12 @@
   &__header {
     @include flex(row, center, space-between);
     margin-bottom: ($base-size * 2);
-    font-family: $font-header;
-    font-size: 22px;
     cursor: pointer;
   }
 
   &__name {
+    @extend .h1;
     position: relative;
-    margin: 0;
-    font-weight: $font-semibold;
-    text-transform: uppercase;
     @media(max-width: 700px) {
       font-size: ($base-size * 1.8);
     }
@@ -46,6 +42,7 @@
   }
 
   &__base-price {
+    @extend .h1;
     font-weight: $font-light;
   }
 
@@ -69,9 +66,7 @@
   }
 
   &__params-title {
-    font-size: 14px;
-    font-weight: $font-bold;
-    text-transform: uppercase;
+    @extend .h2;
     margin: ($base-size * 2) 0;
   }
 
