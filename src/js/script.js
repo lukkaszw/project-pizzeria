@@ -199,9 +199,9 @@
     }
 
     cartProductUpdate(params, amount) {
-      const optionsInParams = [];
 
       /*
+      const optionsInParams = [];
 
 
         params = {
@@ -243,13 +243,20 @@
 
       */
 
-      Object.keys(params).forEach(param => {
+      /*Object.keys(params).forEach(param => {
         Object.keys(params[param].options).forEach(option => {
           optionsInParams.push(option);
         });
+      });*/
+
+      let chosenOptions = [];
+
+      Object.keys(params).forEach(param => {
+        let options = (Object.entries(params[param].options).map(([key]) => key));
+        chosenOptions = chosenOptions.concat(options);
       });
 
-      this.setOptions(optionsInParams, amount);
+      this.setOptions(chosenOptions, amount);
 
       this.processOrder();
       if(!this.element.classList.contains('active')) {

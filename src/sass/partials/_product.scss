@@ -111,6 +111,10 @@
       @include center();
       opacity: 0;
       transition: opacity 500ms;
+
+      &.active {
+        opacity: 1;
+      }
     }
 
     &.active {
