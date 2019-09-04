@@ -171,21 +171,18 @@ class Product {
 
     let choosenOptions = [];
 
-    Object.keys(params).forEach(param => {
+    /*Object.keys(params).forEach(param => {
       Object.keys(params[param].options).forEach(option => {
         choosenOptions.push(option);
       });
-    });
+    });*/
 
 
-
-
-    /*Object.keys(params).forEach(param => {
-      const options = Object.entries(params[param].options);
-      choosenOptions.push(options);
+    Object.keys(params).forEach(param => {
+      let options = (Object.entries(params[param].options).map(([key]) => key));
+      choosenOptions = choosenOptions.concat(options);
 
     });
-    choosenOptions = choosenOptions.flat(2);*/
 
     this.setOptions(choosenOptions, amount);
 
