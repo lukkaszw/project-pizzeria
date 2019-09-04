@@ -169,22 +169,16 @@ class Product {
 
     */
 
-    let choosenOptions = [];
-
-    /*Object.keys(params).forEach(param => {
-      Object.keys(params[param].options).forEach(option => {
-        choosenOptions.push(option);
-      });
-    });*/
-
+    let chosenOptions = [];
 
     Object.keys(params).forEach(param => {
-      let options = (Object.entries(params[param].options).map(([key]) => key));
-      choosenOptions = choosenOptions.concat(options);
-
+      Object.keys(params[param].options).forEach(option => {
+        chosenOptions.push(option);
+      });
     });
 
-    this.setOptions(choosenOptions, amount);
+
+    this.setOptions(chosenOptions, amount);
 
     this.processOrder();
     if(!this.element.classList.contains('active')) {
