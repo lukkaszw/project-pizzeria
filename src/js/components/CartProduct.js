@@ -36,7 +36,7 @@ class CartProduct {
   initAmountWidget() {
     this.amountWidget = new AmountWidget(this.dom.amountWidget);
     this.amountWidget.value = this.amount;
-    this.amountWidget.input.value = this.amount;
+    this.amountWidget.dom.input.value = this.amount;
     this.dom.amountWidget.addEventListener('updated', () => this.updateAmount());
   }
 

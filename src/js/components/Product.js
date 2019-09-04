@@ -48,7 +48,7 @@ class Product {
   }
 
   setOptions(chosenOptions, amount) {
-    this.amountWidget.input.value = amount;
+    this.amountWidget.dom.input.value = amount;
     this.amountWidget.value = amount;
 
     this.formInputs.forEach(element => {
@@ -111,7 +111,6 @@ class Product {
   addToCart() {
     this.name = this.data.name;
     this.amount = this.amountWidget.value;
-    //app.cart.add(this);
 
     const event = new CustomEvent('add-to-cart', {
       bubbles: true,
@@ -126,7 +125,7 @@ class Product {
   }
 
   cartProductUpdate(params, amount) {
-    const optionsInParams = [];
+
 
     /*
 
@@ -170,13 +169,25 @@ class Product {
 
     */
 
+    let choosenOptions = [];
+
     Object.keys(params).forEach(param => {
       Object.keys(params[param].options).forEach(option => {
-        optionsInParams.push(option);
+        choosenOptions.push(option);
       });
     });
 
-    this.setOptions(optionsInParams, amount);
+
+
+
+    /*Object.keys(params).forEach(param => {
+      const options = Object.entries(params[param].options);
+      choosenOptions.push(options);
+
+    });
+    choosenOptions = choosenOptions.flat(2);*/
+
+    this.setOptions(choosenOptions, amount);
 
     this.processOrder();
     if(!this.element.classList.contains('active')) {
