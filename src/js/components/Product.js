@@ -2,7 +2,6 @@ import { select, templates, classNames } from '../settings.js';
 import { utils } from '../utils.js';
 import AmountWidget from './AmountWidget.js';
 
-
 class Product {
   constructor(id, data) {
     this.id = id;
@@ -33,15 +32,12 @@ class Product {
   }
 
   resetOptions() {
-    const defaultOptions = [];
+    let defaultOptions = [];
     if(this.data.params) {
-      Object.keys(this.data.params).forEach(param => {
-        Object.keys(this.data.params[param].options).forEach(option => {
-          if(this.data.params[param].options[option].default) {
-            defaultOptions.push(option);
-          }
-        });
-      });
+      defaultOptions = Object.values(this.data.params)
+        .map(paramOptions => Object.keys(paramOptions.options)
+          .filter(key => paramOptions.options[key].default))
+        .flat();
     }
     this.setOptions(defaultOptions, 1);
     this.processOrder();
@@ -111,7 +107,6 @@ class Product {
   addToCart() {
     this.name = this.data.name;
     this.amount = this.amountWidget.value;
-    //app.cart.add(this);
 
     const event = new CustomEvent('add-to-cart', {
       bubbles: true,
@@ -126,57 +121,13 @@ class Product {
   }
 
   cartProductUpdate(params, amount) {
-    const optionsInParams = [];
+    let chosenOptions = [];
 
-    /*
+    chosenOptions = Object.values(params)
+      .map(paramsOptions => (Object.keys(paramsOptions.options)))
+      .flat();
 
-
-      params = {
-        param1: {
-          options1: {
-            optionA1: {},
-            optionA2: {}
-          },
-          options2: {
-            optionB1: {},
-            optionB2: {}
-          }
-        },
-        param2: {
-          options1: {
-            optionC1: {},
-            optionC2: {}
-          },
-          options2: {
-            optionD1: {},
-            optionD2: {}
-          },
-        }
-      }
-
-      Taka mniej więcej struktura obiektu przychodzi z produktu z karty (z cartProduct).
-
-      Chce wrzucić do tablicy optionsInParams poszczególne opcje, ale nie ich wartości tylko klucze(keys). Tak żeby w tablicy było: ["optionA1", "optionA2", "optionB1", "optionB2", "optionC1" itd....].
-
-      Podobnie robie w metodzie resetOptions. Tylko tam potrzebne mi są tylko wartości defaultowe, dlatego sprawdzam, czy opcje mają default na true i dopiero wtedy je pushuje.
-
-      Taka tablica jest mi potrzebna jako argument do metody this.setOptions, bo takie wartości są ustawiane jako id lub name w formularzu w checkboxach, radio oraz jako value w opcjach selectu. W ten sposób sprawdzając czy w tej tablicy są ich atrybuty ustawiam opcje w polach wyboru produktu.
-
-      Dlatego loopuje porzez wszystkie params, a następnie wszystkie options w każdym param by się dostac do kluczy option i je wrzucić do tablicy. Chciałem metodą map wewnątrz pierwszej pętli, ale wtedy wychodzi tablica opcji z ostatniego param. Chyba, że bym konkatenował każdą następną tablicę zwróconą z map do tej głównej. Myśle, że wyszłoby bardziej zagmatwanie niż zwykłym pushem.
-
-      Tak wymyśliłem algorytm na reset opcji po dodaniu produktu oraz ustawianie opcji edytowanego produktu z karty.
-      Oczywiście jeśli masz pomysł na prostrze i bardziej czytelne rozwiązania to byłoby super i z chęcią wysłucham każdej rady :)
-
-
-    */
-
-    Object.keys(params).forEach(param => {
-      Object.keys(params[param].options).forEach(option => {
-        optionsInParams.push(option);
-      });
-    });
-
-    this.setOptions(optionsInParams, amount);
+    this.setOptions(chosenOptions, amount);
 
     this.processOrder();
     if(!this.element.classList.contains('active')) {

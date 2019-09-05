@@ -2,7 +2,6 @@ import { select } from '../settings.js';
 import Cart from './Cart.js';
 import Product from './Product.js';
 
-
 class App {
   constructor(dbPaths) {
     this.dbPaths = dbPaths;
