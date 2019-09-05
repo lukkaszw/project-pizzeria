@@ -125,9 +125,7 @@ class Product {
 
   cartProductUpdate(params, amount) {
 
-    let chosenOptions = [];
-
-    chosenOptions = Object.values(params)
+    const chosenOptions = Object.values(params)
       .map(paramsOptions => (Object.keys(paramsOptions.options)))
       .flat();
 
