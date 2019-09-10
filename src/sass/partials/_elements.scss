@@ -6,6 +6,11 @@
 
 .btn-secondary {
   @include btn($color-main, $color-light, $color-main);
+
+  &:disabled {
+    background-color: gray;
+    cursor: not-allowed;
+  }
 }
 
 .btn-quantity {
