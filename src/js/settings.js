@@ -11,11 +11,15 @@ export const select = {
     cart: '#cart',
     pages: '#pages',
     booking: '.booking-wrapper',
+    mainPage: '#main-page',
   },
   all: {
     menuProducts: '#product-list > .product',
     menuProductsActive: '#product-list > .product.active',
     formInputs: 'input, select',
+  },
+  mainPage: {
+    boxLinks: '.box',
   },
   menuProduct: {
     clickable: '.product__header',

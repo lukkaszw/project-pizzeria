@@ -1,4 +1,5 @@
 import { select, classNames } from '../settings.js';
+import MainPage from './MainPage.js';
 import Cart from './Cart.js';
 import Product from './Product.js';
 import Booking from './Booking.js';
@@ -71,6 +72,15 @@ class App {
       });
   }
 
+  initMainPage() {
+    this.mainPageElement = document.querySelector(select.containerOf.mainPage);
+    this.mainPage = new MainPage(this.mainPageElement);
+
+    this.mainPageElement.addEventListener('changePage', (e) => {
+      this.activatePage(e.detail.pageId);
+    });
+  }
+
   initMenu() {
     for(let productData in this.data.products) {
       new Product(this.data.products[productData].id, this.data.products[productData]);
@@ -96,6 +106,7 @@ class App {
   init() {
     this.initPages();
     this.initData();
+    this.initMainPage();
     this.initMenu();
     this.initCart();
     this.initBooking();
