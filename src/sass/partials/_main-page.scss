@@ -125,13 +125,11 @@
   }
 }
 
-
-
 .slide {
   position: absolute;
   top: 0;
   left: 0;
-  width :100%;
+  width : 100%;
   height: 100%;
   padding: 10px;
   opacity: 0;
@@ -145,14 +143,14 @@
 .carousel-panel {
   width: 100%;
 
-  & ul {
+  ul {
     list-style: none;
     padding: 0;
     margin: 20px 0 0 0;
     text-align: center;
   }
 
-  & li {
+  li {
     display: inline-block;
     margin: 0 5px;
   }
