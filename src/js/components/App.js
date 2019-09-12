@@ -78,6 +78,7 @@ class App {
 
     this.mainPageElement.addEventListener('changePage', (e) => {
       this.activatePage(e.detail.pageId);
+      window.location.hash = '#/' + e.detail.pageId;
     });
   }
 

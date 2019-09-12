@@ -208,15 +208,12 @@
   color: $color-success;
 
   &__link {
+    display: block;
     color: darken($color-success, 30%);
     font-size: ($base-size * 1.3);
   }
 
   &.error {
     color: $color-danger;
-  }
-
-  span {
-    display: block;
   }
 }
