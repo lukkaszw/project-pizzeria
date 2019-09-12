@@ -240,7 +240,7 @@ class Booking {
   generateBookingInfo(isSuccess, link) {
     const message = isSuccess ? (
       `${messages.booking.success}
-      <a href="${link}" class="booking-info__link">${link}</a>`
+      <a href="${link}" target="_blank" class="booking-info__link">${link}</a>`
     ) : (
       messages.booking.error
     );

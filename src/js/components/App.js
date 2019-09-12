@@ -13,7 +13,12 @@ class App {
   initPages() {
     this.pages = document.querySelector(select.containerOf.pages).children;
     this.navLinks = document.querySelectorAll(select.nav.links);
-    const pageIdFromHash = window.location.hash.replace('#/', '');
+    let pageIdFromHash = window.location.hash.replace('#/', '');
+    if(pageIdFromHash.includes('/')) {
+      pageIdFromHash = pageIdFromHash.substring(0, pageIdFromHash.indexOf('/'));
+    }
+
+    console.log(pageIdFromHash);
 
     let pageMatchingHash = this.pages[0].id;
 
