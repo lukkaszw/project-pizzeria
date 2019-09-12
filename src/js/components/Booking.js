@@ -8,7 +8,6 @@ class Booking {
   constructor(wrapper) {
     this.render(wrapper);
     this.initWidgets();
-    this.getData();
   }
 
   getData() {
@@ -107,16 +106,15 @@ class Booking {
     if(element.value.length < 1) {
       element.classList.add('error');
       return false;
-    } else {
-      element.classList.remove('error');
-      return true;
     }
+    element.classList.remove('error');
+    return true;
   }
 
   checkFormValidation() {
     let isValid = (this.validateFormEl(this.dom.phone) && this.validateFormEl(this.dom.address));
     if(!this.chosenTable) isValid = false;
-    this.dom.submitBtn.disabled = isValid ? false : true;
+    this.dom.submitBtn.disabled = !isValid;
   }
 
   updateDOM() {
@@ -190,11 +188,6 @@ class Booking {
       if(starter.checked) starters.push(starter.value);
     });
 
-    /* Tu dałem drugie rozwiazanie, ale muszę zmieniać NodeList na tablicę, bo na NodeLiście nie działa metoda filter. Przez to raczej wydajnościowo nie jest lepsze.
-    const starters = [...this.dom.starters]
-      .filter(starter => starter.checked)
-      .map(starter => starter.value);
-    */
     const bookingData = {
       date: this.date,
       hour: this.hourPicker.value,

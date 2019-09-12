@@ -100,7 +100,7 @@ class App {
 
   initBooking() {
     const bookingElement = document.querySelector(select.containerOf.booking);
-    new Booking(bookingElement);
+    new Booking(bookingElement).getData();
   }
 
   init() {
