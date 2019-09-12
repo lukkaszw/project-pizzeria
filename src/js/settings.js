@@ -20,6 +20,11 @@ export const select = {
   },
   mainPage: {
     boxLinks: '.box',
+    carrousel: '.recomendations',
+  },
+  carrousel: {
+    slides: '.slide',
+    btns: '.carousel-panel__btn',
   },
   menuProduct: {
     clickable: '.product__header',

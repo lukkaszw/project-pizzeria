@@ -133,10 +133,11 @@
   height: 100%;
   padding: 10px;
   opacity: 0;
+  transition-delay: .5s;
   transition: .5s;
 
   &.active {
-    opacity: 1;
+    animation: slideEffect linear 3s;
   }
 }
 
@@ -173,4 +174,6 @@
     }
   }
 }
+
+
 

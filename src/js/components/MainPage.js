@@ -1,8 +1,10 @@
 import { select } from '../settings.js';
+import Carrousel from './Carrousel.js';
 
 class MainPage {
   constructor(element) {
     this.getElements(element);
+    this.initCarrousel();
   }
 
   getElements(element) {
@@ -27,6 +29,11 @@ class MainPage {
       },
     });
     this.dom.wrapper.dispatchEvent(event);
+  }
+
+  initCarrousel() {
+    this.carrouselElement = this.dom.wrapper.querySelector(select.mainPage.carrousel);
+    this.carrousel = new Carrousel(this.carrouselElement);
   }
 
 
