@@ -5,8 +5,8 @@ import DatePicker from './DatePicker.js';
 import HourPicker from './HourPicker.js';
 
 class Booking {
-  constructor(element) {
-    this.render(element);
+  constructor(wrapper) {
+    this.render(wrapper);
     this.initWidgets();
     this.getData();
   }
@@ -116,11 +116,7 @@ class Booking {
   checkFormValidation() {
     let isValid = (this.validateFormEl(this.dom.phone) && this.validateFormEl(this.dom.address));
     if(!this.chosenTable) isValid = false;
-    if(isValid) {
-      this.dom.submitBtn.disabled = false;
-    } else {
-      this.dom.submitBtn.disabled = true;
-    }
+    this.dom.submitBtn.disabled = isValid ? false : true;
   }
 
   updateDOM() {
