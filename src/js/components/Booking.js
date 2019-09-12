@@ -1,6 +1,6 @@
 /* global uuid */
 
-import { select, templates, settings, classNames } from '../settings.js';
+import { select, templates, settings, classNames, messages } from '../settings.js';
 import { utils } from '../utils.js';
 import AmountWidget from './AmountWidget.js';
 import DatePicker from './DatePicker.js';
@@ -161,6 +161,7 @@ class Booking {
     this.dom.address = this.dom.wrapper.querySelector(select.booking.address);
     this.dom.form = this.dom.wrapper.querySelector(select.booking.form);
     this.dom.submitBtn = this.dom.wrapper.querySelector(select.booking.submitBtn);
+    this.dom.bookingInfo = this.dom.wrapper.querySelector(select.booking.bookingInfo);
 
     this.dom.submitBtn.disabled = true;
 
@@ -230,16 +231,28 @@ class Booking {
       })
       .then(parsedResponse => {
         console.log('Dokonano rezerwacji:', parsedResponse);
+        const link = `${document.URL}/${bookingData.uuid}`;
         this.chosenTable.classList.add(classNames.booking.tableBooked);
         this.resetChosenTable();
         this.getData();
+        this.generateBookingInfo(true, link);
       })
       .catch(error => {
         console.warn(error);
-        alert('Niestety nie udało się dokonać rezerwacji przez problemy techniczne na stronie. Nasz zespół nad tym pracuje. Zapraszamy wkrótce.');
+        this.generateBookingInfo(false);
       });
 
+  }
 
+  generateBookingInfo(isSuccess, link) {
+    const message = isSuccess ? (
+      `${messages.booking.success}
+      <span class="booking-info__link">${link}</span>`
+    ) : (
+      messages.booking.error
+    );
+    isSuccess ? this.dom.bookingInfo.classList.remove('error') : this.dom.bookingInfo.classList.add('error');
+    this.dom.bookingInfo.innerHTML = message;
   }
 
   choseTable(table) {

@@ -76,7 +76,8 @@ export const select = {
     starter: '[name="starter"]',
     phone: '[name="phone"]',
     address: '[name="address"]',
-    submitBtn: '[type="submit"]'
+    submitBtn: '[type="submit"]',
+    bookingInfo: '.booking-info',
   },
   nav: {
     links: '.main-nav a',
@@ -134,6 +135,13 @@ export const settings = {
     dateEndParamKey: 'date_lte',
     notRepeatParam: 'repeat=false',
     repeatParam: 'repeat_ne=false',
+  },
+};
+
+export const messages = {
+  booking: {
+    success: 'Dokonano rezerwacji. Link do jej edycji:',
+    error: 'Niestety nie udało się dokonać rezerwacji przez problemy techniczne na stronie. Nasz zespół nad tym pracuje. Zapraszamy wkrótce.',
   },
 };
 
