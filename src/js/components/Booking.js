@@ -1,3 +1,5 @@
+/* global uuid */
+
 import { select, templates, settings, classNames } from '../settings.js';
 import { utils } from '../utils.js';
 import AmountWidget from './AmountWidget.js';
@@ -204,7 +206,8 @@ class Booking {
       ppl: this.peopleAmount.value,
       starters,
       phone: this.dom.phone.value,
-      address: this.dom.address.value
+      address: this.dom.address.value,
+      uuid: uuid.v4(),
     };
 
     const url = `${settings.db.url}/${settings.db.booking}`;
