@@ -144,14 +144,14 @@
 .carousel-panel {
   width: 100%;
 
-  ul {
+  &__list {
     list-style: none;
     padding: 0;
     margin: 20px 0 0 0;
     text-align: center;
   }
 
-  li {
+  &__item {
     display: inline-block;
     margin: 0 5px;
   }
