@@ -224,7 +224,7 @@ class Booking {
       })
       .then(parsedResponse => {
         console.log('Dokonano rezerwacji:', parsedResponse);
-        const link = `${document.URL}/${bookingData.uuid}`;
+        const link = `${window.location.protocol}//${window.location.host}/#/booking/${bookingData.uuid}`;
         this.chosenTable.classList.add(classNames.booking.tableBooked);
         this.resetChosenTable();
         this.getData();
