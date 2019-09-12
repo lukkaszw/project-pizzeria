@@ -8,7 +8,6 @@ class Booking {
   constructor(wrapper) {
     this.render(wrapper);
     this.initWidgets();
-    this.getData();
   }
 
   getData() {
@@ -107,16 +106,15 @@ class Booking {
     if(element.value.length < 1) {
       element.classList.add('error');
       return false;
-    } else {
-      element.classList.remove('error');
-      return true;
     }
+    element.classList.remove('error');
+    return true;
   }
 
   checkFormValidation() {
     let isValid = (this.validateFormEl(this.dom.phone) && this.validateFormEl(this.dom.address));
     if(!this.chosenTable) isValid = false;
-    this.dom.submitBtn.disabled = isValid ? false : true;
+    this.dom.submitBtn.disabled = !isValid;
   }
 
   updateDOM() {
