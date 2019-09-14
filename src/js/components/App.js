@@ -18,8 +18,6 @@ class App {
       pageIdFromHash = pageIdFromHash.substring(0, pageIdFromHash.indexOf('/'));
     }
 
-    console.log(pageIdFromHash);
-
     let pageMatchingHash = this.pages[0].id;
 
     for(let page of this.pages) {

@@ -70,6 +70,15 @@ utils.addDays = function(dateStr, days){
   return dateObj;
 };
 
+utils.regexPhoneNumber = function(value) {
+  // eslint-disable-next-line no-useless-escape
+  return /^(?:\(?\?)?(?:[-\.\(\)\s]*(\d)){9}\)?$/.test(value);
+};
+
+utils.regexEmail = function(value) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+};
+
 
 Handlebars.registerHelper('ifEquals', function(arg1, arg2, options) {
   return (arg1 == arg2) ? options.fn(this) : options.inverse(this);

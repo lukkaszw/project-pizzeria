@@ -14,9 +14,14 @@ class HourPicker extends BaseWidget {
 
   initPlugin() {
     this.dom.input = this.dom.wrapper.querySelector(select.widgets.hourPicker.input);
-    rangeSlider.create(this.dom.input);
+    this.slider = new rangeSlider(this.dom.input);
     this.dom.input.addEventListener('input', (e) => this.value = e.target.value);
     this.value = this.dom.input.value;
+  }
+
+  changeValue(hour) {
+    const hourToNumber = utils.hourToNumber(hour);
+    this.slider.update({value: hourToNumber});
   }
 
   parseValue(value) {

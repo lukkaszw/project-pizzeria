@@ -255,16 +255,5 @@
       "starters": ["lemonWater"]
     }
   ],
-  "booking": [
-    {
-      "id": 1,
-      "date": "2019-09-12",
-      "hour": "18:00",
-      "table": 1,
-      "repeat": false,
-      "duration": 4,
-      "ppl": 3,
-      "starters": []
-    }
-  ]
+  "booking": []
 }

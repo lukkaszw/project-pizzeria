@@ -78,6 +78,9 @@ export const select = {
     address: '[name="address"]',
     submitBtn: '[type="submit"]',
     bookingInfo: '.booking-info',
+    cancelUpdate: '.cancel-update',
+    updateLink: '.booking-info__link',
+    deleteBtn: '.delete-btn',
   },
   nav: {
     links: '.main-nav a',
@@ -96,7 +99,9 @@ export const classNames = {
   booking: {
     loading: 'loading',
     tableBooked: 'booked',
-    tableChosen: 'chosen'
+    tableChosen: 'chosen',
+    btnDeleteActive: 'active',
+    btnCancelUpdateActive: 'active',
   },
   nav: {
     active: 'active',
@@ -124,6 +129,11 @@ export const settings = {
   },
   booking: {
     tableIdAttribute: 'data-table',
+    hashKeyWords: ['#booking', '#less', '#more'],
+    bookTableBtn: {
+      bookName: 'Book table',
+      updateName: 'Update',
+    },
   },
   db: {
     url: 'http://localhost:3131',
@@ -136,12 +146,31 @@ export const settings = {
     notRepeatParam: 'repeat=false',
     repeatParam: 'repeat_ne=false',
   },
+  uuid: {
+    v4: {
+      length: 36
+    }
+  }
 };
 
 export const messages = {
   booking: {
-    success: 'Dokonano rezerwacji. Link do jej edycji:',
-    error: 'Niestety nie udało się dokonać rezerwacji przez problemy techniczne na stronie. Nasz zespół nad tym pracuje. Zapraszamy wkrótce.',
+    'POST': {
+      success: 'Dokonano rezerwacji. Link do jej edycji:',
+      error: 'Niestety nie udało się dokonać rezerwacji przez problemy techniczne na stronie. Nasz zespół nad tym pracuje. Zapraszamy wkrótce.',
+    },
+    'PUT': {
+      success: 'Dokonano aktualizacji rezerwacji. Link do jej ponownej edycji:',
+      error: 'Niestety nie udało się zaktualizować rezerwacji przez problemy techniczne na stronie. Nasz zespół nad tym pracuje. Zapraszamy wkrótce.',
+    },
+    'DELETE': {
+      success: 'Rezerwacja została usunięta.',
+      error: 'Nie udało się usunąć rezerwacji. Problemy techniczne na stronie. Prosimy o kontakt telefoniczny.',
+    },
+    'GET_UPDATE': {
+      success: 'Edycja rezerwacji',
+      error: 'Nieprawidłowy link do edycji rezerwacji! Prosimy upewnić się czy został użyty prawidłowy link i spróbować ponownie.',
+    }
   },
 };
 

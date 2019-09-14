@@ -13,6 +13,10 @@
   }
 }
 
+.btn-tertiary {
+  @include btn($color-danger, $color-light, $color-danger);
+}
+
 .btn-quantity {
   @include btn($color-dark, $color-light, $color-dark);
   vertical-align: top;

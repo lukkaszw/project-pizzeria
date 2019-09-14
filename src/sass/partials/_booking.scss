@@ -203,6 +203,23 @@
   margin: ($base-size * 4) auto;
 }
 
+.cancel-update {
+  margin: $base-size auto;
+  display: none;
+
+  &.active {
+    display: block;
+  }
+}
+
+.delete-btn {
+  display: none;
+
+  &.active {
+    display: inline-block;
+  }
+}
+
 .booking-info {
   margin-top: ($base-size * 2);
   color: $color-success;
