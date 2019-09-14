@@ -5,6 +5,7 @@ import { utils } from '../utils.js';
 import AmountWidget from './AmountWidget.js';
 import DatePicker from './DatePicker.js';
 import HourPicker from './HourPicker.js';
+import Validator from './Validator.js';
 
 class Booking {
   constructor(wrapper) {
@@ -142,26 +143,26 @@ class Booking {
     }
   }
 
-  validateEmail(element) {
-    if(utils.regexEmail(element.value)) {
-      element.classList.remove('error');
-      return true;
-    }
-    element.classList.add('error');
-    return false;
-  }
+  // validateEmail(element) {
+  //   if(utils.regexEmail(element.value)) {
+  //     element.classList.remove('error');
+  //     return true;
+  //   }
+  //   element.classList.add('error');
+  //   return false;
+  // }
 
-  validatePhoneNumber(element) {
-    if(utils.regexPhoneNumber(element.value)) {
-      element.classList.remove('error');
-      return true;
-    }
-    element.classList.add('error');
-    return false;
-  }
+  // validatePhoneNumber(element) {
+  //   if(utils.regexPhoneNumber(element.value)) {
+  //     element.classList.remove('error');
+  //     return true;
+  //   }
+  //   element.classList.add('error');
+  //   return false;
+  // }
 
   checkFormValidation() {
-    let isValid = (this.validatePhoneNumber(this.dom.phone) && this.validateEmail(this.dom.address));
+    let isValid = (Validator.validatePhone(this.dom.phone) && Validator.validateEmail(this.dom.address));
     if(!this.chosenTable) isValid = false;
     this.dom.submitBtn.disabled = !isValid;
   }

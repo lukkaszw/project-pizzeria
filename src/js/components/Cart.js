@@ -1,6 +1,7 @@
 import { settings, select, classNames, templates } from '../settings.js';
 import { utils } from '../utils.js';
 import CartProduct from './CartProduct.js';
+import Validator from './Validator.js';
 
 class Cart {
   constructor(element) {
@@ -37,25 +38,15 @@ class Cart {
       this.sendOrder();
     });
 
-    this.dom.phone.addEventListener('change', (e) => this.validateFormEl(e.target));
-    this.dom.address.addEventListener('change', (e) => this.validateFormEl(e.target));
-  }
-
-  validateFormEl(element) {
-    if(element.value.length < 9) {
-      element.classList.add('error');
-      return false;
-    } else {
-      element.classList.remove('error');
-      return true;
-    }
+    this.dom.phone.addEventListener('change', (e) => Validator.validatePhone(e.target));
+    this.dom.address.addEventListener('change', (e) => Validator.validateAddress(e.target));
   }
 
   validateData() {
     let isValid = true;
     if(this.products.length === 0) isValid = false;
-    if(!this.validateFormEl(this.dom.phone)) isValid = false;
-    if(!this.validateFormEl(this.dom.address)) isValid = false;
+    if(!Validator.validatePhone(this.dom.phone)) isValid = false;
+    if(!Validator.validateAddress(this.dom.address)) isValid = false;
     return isValid;
   }
 

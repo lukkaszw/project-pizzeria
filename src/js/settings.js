@@ -109,6 +109,9 @@ export const classNames = {
   pages: {
     active: 'active',
   },
+  validation: {
+    invalid: 'error',
+  }
 };
 
 export const settings = {
