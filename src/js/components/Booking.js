@@ -115,9 +115,7 @@ class Booking {
     this.chosenTable.classList.add(classNames.booking.tableChosen);
     this.peopleAmount.value = this.bookingToUpdate.ppl;
     this.hoursAmount.value = this.bookingToUpdate.duration;
-    this.dom.starters.forEach(starter => {
-      this.bookingToUpdate.starters.includes(starter.value) ? starter.checked = true : starter.checked = false;
-    });
+    this.dom.starters.forEach(starter => starter.checked = this.bookingToUpdate.starters.includes(starter.value));
     this.dom.phone.value = this.bookingToUpdate.phone;
     this.dom.address.value = this.bookingToUpdate.address;
     this.dom.submitBtn.innerHTML = settings.booking.bookTableBtn.updateName;
@@ -142,24 +140,6 @@ class Booking {
 
     }
   }
-
-  // validateEmail(element) {
-  //   if(utils.regexEmail(element.value)) {
-  //     element.classList.remove('error');
-  //     return true;
-  //   }
-  //   element.classList.add('error');
-  //   return false;
-  // }
-
-  // validatePhoneNumber(element) {
-  //   if(utils.regexPhoneNumber(element.value)) {
-  //     element.classList.remove('error');
-  //     return true;
-  //   }
-  //   element.classList.add('error');
-  //   return false;
-  // }
 
   checkFormValidation() {
     let isValid = (Validator.validatePhone(this.dom.phone) && Validator.validateEmail(this.dom.address));
@@ -263,9 +243,7 @@ class Booking {
     window.location.hash = '#/booking';
     this.peopleAmount.value = settings.amountWidget.defaultValue;
     this.hoursAmount.value = settings.amountWidget.defaultValue;
-    this.dom.tables.forEach(table => {
-      table.classList.remove(classNames.booking.tableChosen, classNames.booking.tableBooked);
-    });
+    this.dom.tables.forEach(table => table.classList.remove(classNames.booking.tableChosen, classNames.booking.tableBooked));
     this.dom.starters.forEach(starter => starter.checked = false);
     this.hourPicker.changeValue(utils.numberToHour(settings.hours.open));
     this.datePicker.picker.setDate(this.datePicker.minDate);
