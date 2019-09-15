@@ -262,10 +262,7 @@ class Booking {
 
     const tableId = parseInt(this.chosenTable.getAttribute(settings.booking.tableIdAttribute));
 
-    const starters = [];
-    this.dom.starters.forEach(starter => {
-      if(starter.checked) starters.push(starter.value);
-    });
+    const starters = [...this.dom.starters].filter(starter => starter.checked).map(starter => starter.value);
 
     const uuidNr = this.bookingToUpdate ? this.bookingToUpdate.uuid : uuid.v4();
     const method = this.bookingToUpdate ? 'PUT' : 'POST';
